@@ -3,286 +3,612 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inna Sushi | אינה סושי - חווית סושי פרימיום</title>
+    <title>Inna Sushi | Experience</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       body {
         font-family: "Assistant", sans-serif;
+        background-color: #0f0f0f;
+        color: #e5e5e5;
+        transition: all 0.3s ease;
       }
-      .sushi-card:hover {
-        transform: translateY(-5px);
+      .premium-glass {
+        background: rgba(18, 18, 18, 0.95);
+        backdrop-filter: blur(20px);
       }
-      .glass-effect {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
+      .menu-card {
+        background: #161616;
+        border: 1px solid #262626;
+        transition: all 0.3s ease;
+        border-radius: 1.5rem;
+      }
+      .menu-card:hover {
+        border-color: #a3e635;
+        transform: translateY(-3px);
+      }
+      .hero-gradient {
+        background: linear-gradient(
+          to bottom,
+          rgba(15, 15, 15, 0) 0%,
+          rgba(15, 15, 15, 1) 100%
+        );
+      }
+      .lang-btn.active {
+        color: #a3e635;
+        border-bottom: 2px solid #a3e635;
+      }
+      .gallery-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 1rem;
+      }
+      input,
+      textarea,
+      select {
+        background: #1a1a1a !important;
+        border: 1px solid #333 !important;
+        color: white !important;
+        outline: none;
+        border-radius: 0.75rem !important;
+      }
+      .modal-bg {
+        background: rgba(0, 0, 0, 0.9);
       }
     </style>
   </head>
-  <body class="bg-[#121212] text-gray-100">
-    <a
-      href="https://wa.me/972587659001?text=היי אינה, אשמח להזמין סושי"
-      class="fixed bottom-6 left-6 z-50 bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-2xl transition-all transform hover:scale-110 flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.4)]"
-      target="_blank"
-      title="שלחו לנו הודעה"
-    >
-      <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-        <path
-          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L0 24l6.335-1.662c1.72.94 3.659 1.437 5.634 1.437h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
-        />
-      </svg>
-    </a>
+  <body class="pb-32">
+    <audio
+      id="click-sound"
+      src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"
+      preload="auto"
+    ></audio>
 
-    <header
-      class="relative h-[400px] flex items-center justify-center text-center overflow-hidden"
+    <div
+      id="reminder-modal"
+      class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-bg transition-opacity duration-300"
     >
-      <div class="absolute inset-0 bg-black/70 z-10"></div>
+      <div
+        class="bg-stone-900 border border-lime-500/30 p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl"
+      >
+        <div class="text-5xl mb-4">⏳</div>
+        <h3
+          id="modal-title"
+          class="text-2xl font-bold mb-2 text-lime-400 font-bold"
+        >
+          הזמנה יום מראש
+        </h3>
+        <p id="modal-text" class="text-gray-300 mb-6 font-light text-lg">
+          כדי להבטיח טריות, אנו מקבלים הזמנות לפחות יום אחד מראש.
+        </p>
+        <button
+          onclick="closeModal()"
+          id="modal-btn"
+          class="w-full bg-lime-500 text-black font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-transform"
+        >
+          הבנתי, תודה!
+        </button>
+      </div>
+    </div>
+
+    <nav
+      class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center premium-glass border-b border-white/5"
+    >
+      <span class="font-bold tracking-tighter text-xl uppercase"
+        >INNA<span class="text-lime-400 text-bold text-lg">SUSHI</span></span
+      >
+      <div class="flex gap-4 text-xs font-bold uppercase tracking-widest">
+        <button
+          onclick="setLanguage('he')"
+          id="btn-he"
+          class="lang-btn active p-1"
+        >
+          עב
+        </button>
+        <button onclick="setLanguage('ru')" id="btn-ru" class="lang-btn p-1">
+          RU
+        </button>
+        <button onclick="setLanguage('en')" id="btn-en" class="lang-btn p-1">
+          EN
+        </button>
+      </div>
+    </nav>
+
+    <header class="relative h-[60vh] w-full overflow-hidden">
       <img
         src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1200&q=80"
-        class="absolute inset-0 w-full h-full object-cover scale-105 animate-pulse"
-        style="animation-duration: 10s"
-        alt="Background"
+        class="w-full h-full object-cover"
+        alt="Sushi Hero"
       />
-
-      <div class="relative z-20 px-4">
-        <h1 class="text-6xl font-bold text-lime-400 mb-4 tracking-tight">
-          Inna Sushi
-        </h1>
-        <p
-          class="text-2xl font-light text-gray-300 max-w-lg mx-auto leading-relaxed border-b border-lime-500/30 pb-4"
+      <div class="absolute inset-0 hero-gradient"></div>
+      <div class="absolute bottom-12 w-full text-center px-6">
+        <h2
+          id="hero-title"
+          class="text-4xl font-light tracking-widest uppercase mb-2"
         >
-          סושי איכותי בעבודת יד, טריות ללא פשרות
+          Japanese Experience
+        </h2>
+        <p id="hero-subtitle" class="text-gray-400 text-sm italic">
+          Premium Handmade Sushi
         </p>
-        <div class="mt-6 flex justify-center gap-4">
-          <span class="bg-white/10 px-4 py-1 rounded-full text-sm"
-            >📍 מעלות והסביבה</span
-          >
-          <span class="bg-white/10 px-4 py-1 rounded-full text-sm"
-            >🛵 משלוחים חינם</span
-          >
-        </div>
       </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-6 -mt-10 relative z-30">
+    <main class="max-w-5xl mx-auto px-6 mt-8">
       <div
-        class="bg-lime-500 text-black p-4 rounded-xl shadow-2xl flex flex-col md:flex-row justify-between items-center gap-4 mb-12"
+        class="border border-lime-500/30 bg-lime-500/5 p-4 rounded-2xl text-center mb-10"
       >
-        <div class="flex items-center gap-3">
-          <span class="text-2xl">🎁</span>
-          <p class="font-bold">חדש! משלוחים חינם באזור מעלות על כל הזמנה!</p>
-        </div>
-        <a
-          href="tel:0587659001"
-          class="bg-black text-white px-6 py-2 rounded-lg font-bold hover:bg-gray-800 transition"
-          >הזמינו עכשיו</a
+        <p
+          id="remind-text"
+          class="text-lime-400 text-sm font-bold tracking-wide"
         >
+          הזמנות יום מראש בלבד | משלוחים חינם במעלות
+        </p>
       </div>
 
-      <section>
-        <div class="flex items-center justify-between mb-8">
-          <h2 class="text-4xl font-bold">התפריט שלנו</h2>
-          <div
-            class="h-1 bg-lime-500 flex-grow mr-6 rounded-full opacity-50"
-          ></div>
-        </div>
-
-        <div id="menu-grid" class="grid gap-6 md:grid-cols-2"></div>
-      </section>
+      <div id="menu-grid" class="grid gap-6 md:grid-cols-2"></div>
 
       <section class="mt-20">
-        <h2 class="text-3xl font-bold mb-8 text-center italic">Insta-Sushi</h2>
+        <h3
+          id="gallery-label"
+          class="text-center text-gray-500 uppercase tracking-[0.3em] text-xs mb-8 font-bold"
+        >
+          Our Kitchen
+        </h3>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div
-            class="overflow-hidden rounded-xl h-48 bg-gray-800 border border-white/5"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=400&h=400&fit=crop"
-              class="w-full h-full object-cover hover:scale-110 transition duration-500"
-            />
-          </div>
-          <div
-            class="overflow-hidden rounded-xl h-48 bg-gray-800 border border-white/5"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=400&fit=crop"
-              class="w-full h-full object-cover hover:scale-110 transition duration-500"
-            />
-          </div>
-          <div
-            class="overflow-hidden rounded-xl h-48 bg-gray-800 border border-white/5"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1617196034183-421b4917c92d?w=400&h=400&fit=crop"
-              class="w-full h-full object-cover hover:scale-110 transition duration-500"
-            />
-          </div>
-          <div
-            class="overflow-hidden rounded-xl h-48 bg-gray-800 border border-white/5"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=400&h=400&fit=crop"
-              class="w-full h-full object-cover hover:scale-110 transition duration-500"
-            />
-          </div>
+          <img
+            src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=400&fit=crop"
+            class="gallery-img shadow-lg"
+            alt="1"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=400&h=400&fit=crop"
+            class="gallery-img shadow-lg"
+            alt="2"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1617196034183-421b4917c92d?w=400&h=400&fit=crop"
+            class="gallery-img shadow-lg"
+            alt="3"
+          />
+          <img
+            src="https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=400&h=400&fit=crop"
+            class="gallery-img shadow-lg"
+            alt="4"
+          />
         </div>
       </section>
 
-      <section class="mt-20 grid md:grid-cols-2 gap-8">
+      <footer
+        class="mt-20 mb-10 p-10 bg-stone-800/20 rounded-[2rem] border border-white/5 text-center"
+      >
+        <h4 class="font-bold text-lime-400 mb-4 uppercase tracking-widest">
+          Inna Sushi מעלות
+        </h4>
+        <p class="text-gray-400 text-sm mb-2">
+          ניתן לשלם ב-Bit, פייבוקס או מזומן 📱
+        </p>
+        <p class="text-xs text-gray-500">
+          כל המנות מוכנות ביום ההזמנה מחומרי הגלם הטריים ביותר
+        </p>
         <div
-          class="bg-stone-800/50 p-8 rounded-3xl border border-white/5 shadow-xl"
+          class="mt-6 pt-6 border-t border-white/5 flex justify-center gap-6"
         >
-          <h3 class="text-2xl font-bold mb-4 text-lime-400">
-            שעות פעילות והזמנות
-          </h3>
-          <ul class="space-y-3 text-gray-300">
-            <li class="flex justify-between border-b border-white/10 pb-2">
-              <span>ראשון - חמישי:</span>
-              <span class="text-white">12:00 - 22:00</span>
-            </li>
-            <li class="flex justify-between border-b border-white/10 pb-2">
-              <span>שישי:</span>
-              <span class="text-white">11:00 - 16:00</span>
-            </li>
-            <li class="flex justify-between text-lime-400/80">
-              <span>* מומלץ להזמין שעה מראש</span>
-            </li>
-          </ul>
+          <a
+            href="tel:0587659001"
+            class="text-gray-400 hover:text-white transition-colors"
+            >058-7659001</a
+          >
+          <span class="text-gray-700">|</span>
+          <span class="text-gray-500 text-xs">© 2024 INNA SUSHI</span>
         </div>
-
-        <div
-          class="bg-stone-800/50 p-8 rounded-3xl border border-white/5 shadow-xl flex flex-col justify-center text-center"
-        >
-          <h3 class="text-2xl font-bold mb-4">דרכי תשלום</h3>
-          <div class="flex justify-center gap-6 opacity-80">
-            <div class="text-center">
-              <span class="block text-3xl">📱</span>
-              <span class="text-xs">Bit / PayBox</span>
-            </div>
-            <div class="text-center">
-              <span class="block text-3xl">💵</span>
-              <span class="text-xs">מזומן</span>
-            </div>
-          </div>
-          <p class="mt-6 text-gray-400 text-sm">התשלום מתבצע בעת קבלת המשלוח</p>
-        </div>
-      </section>
-
-      <section class="mt-16 mb-20 text-center">
-        <h3 class="text-4xl font-bold mb-8">להזמנות חייגו:</h3>
-        <a
-          href="tel:0587659001"
-          class="text-5xl md:text-7xl font-black text-lime-400 hover:text-white transition tracking-tighter"
-        >
-          058-7659001
-        </a>
-      </section>
+      </footer>
     </main>
 
-    <footer class="py-12 border-t border-white/5 text-center text-gray-600">
-      <p>Inna Sushi - מיוצר באהבה במעלות</p>
-    </footer>
+    <div
+      id="mini-cart"
+      class="fixed bottom-0 w-full premium-glass border-t border-lime-500/30 p-6 transform translate-y-full transition-all duration-300 z-40"
+    >
+      <div class="max-w-4xl mx-auto flex justify-between items-center">
+        <div>
+          <span
+            id="mini-cart-items"
+            class="text-[10px] uppercase tracking-widest text-gray-500 block"
+            >Selection</span
+          >
+          <span
+            id="mini-cart-total"
+            class="text-3xl font-light tracking-tighter"
+            >₪0</span
+          >
+        </div>
+        <button
+          onclick="openOrderForm()"
+          id="checkout-btn"
+          class="bg-lime-500 text-black px-10 py-4 rounded-2xl font-bold uppercase text-[10px] tracking-widest active:scale-95 transition-all shadow-lg shadow-lime-500/20"
+        >
+          להזמנה
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="order-overlay"
+      class="fixed inset-0 z-[60] bg-[#0f0f0f] hidden flex flex-col p-8 overflow-y-auto"
+    >
+      <div class="max-w-xl mx-auto w-full">
+        <div class="flex justify-between items-center mb-10">
+          <h2
+            id="form-title"
+            class="text-2xl font-light uppercase tracking-widest"
+          >
+            Order Details
+          </h2>
+          <button onclick="closeOrderForm()" class="text-gray-500 text-4xl">
+            &times;
+          </button>
+        </div>
+        <div class="space-y-4">
+          <input
+            type="text"
+            id="cust-name"
+            class="w-full p-4"
+            placeholder="שם מלא"
+          />
+          <input
+            type="tel"
+            id="cust-phone"
+            class="w-full p-4"
+            placeholder="טלפון"
+          />
+
+          <select
+            id="cust-city"
+            class="w-full p-4"
+            onchange="toggleAddressField()"
+          >
+            <option value="מעלות">מעלות (משלוח חינם)</option>
+            <option value="תרשיחא">תרשיחא (איסוף עצמי)</option>
+            <option value="כפר ורדים">כפר ורדים (איסוף עצמי)</option>
+            <option value="אחר">אחר (איסוף עצמי)</option>
+          </select>
+
+          <div id="address-wrapper">
+            <input
+              type="text"
+              id="cust-address"
+              class="w-full p-4"
+              placeholder="רחוב ומספר בית"
+            />
+          </div>
+
+          <textarea
+            id="cust-notes"
+            class="w-full p-4 h-24"
+            placeholder="הערות מיוחדות..."
+          ></textarea>
+          <div
+            id="summary-area"
+            class="text-xs text-gray-500 border-t border-white/5 pt-4 mt-4"
+          ></div>
+          <button
+            onclick="sendWhatsApp()"
+            id="submit-btn"
+            class="w-full bg-green-600 text-white py-5 rounded-2xl font-bold uppercase tracking-widest shadow-xl"
+          >
+            שלח בוואטסאפ
+          </button>
+        </div>
+      </div>
+    </div>
 
     <script>
-      const menuItems = [
+      const translations = {
+        he: {
+          heroTitle: "חוויה יפנית",
+          heroSub: "סושי פרימיום בעבודת יד",
+          remind: "הזמנות יום מראש בלבד | משלוחים חינם במעלות",
+          gallery: "המטבח שלנו",
+          checkout: "להזמנה",
+          selection: "פריטים בסל",
+          formTitle: "פרטי הזמנה",
+          name: "שם מלא",
+          phone: "טלפון",
+          address: "כתובת",
+          notes: "הערות להזמנה",
+          submit: "שלח בוואטסאפ",
+          dir: "rtl",
+          mTitle: "הזמנה יום מראש",
+          mText: "כדי להבטיח טריות, אנו מקבלים הזמנות לפחות יום אחד מראש.",
+          mBtn: "הבנתי, תודה!",
+        },
+        en: {
+          heroTitle: "Japanese Experience",
+          heroSub: "Premium Handmade Sushi",
+          remind: "Orders 1 day in advance | Free delivery in Ma'alot",
+          gallery: "Our Kitchen",
+          checkout: "Checkout",
+          selection: "Items",
+          formTitle: "Order Details",
+          name: "Full Name",
+          phone: "Phone",
+          address: "Address",
+          notes: "Special Notes",
+          submit: "Send WhatsApp",
+          dir: "ltr",
+          mTitle: "Order in Advance",
+          mText:
+            "To ensure maximum freshness, please place orders at least 1 day ahead.",
+          mBtn: "Got it, thanks!",
+        },
+        ru: {
+          heroTitle: "Японская Кухня",
+          heroSub: "Премиум суши ручной работы",
+          remind: "Заказ за 1 день | Бесплатная доставка в Маалот",
+          gallery: "Наша Кухня",
+          checkout: "Заказать",
+          selection: "Выбрано",
+          formTitle: "Детали заказа",
+          name: "Имя",
+          phone: "Телефон",
+          address: "Адрес",
+          notes: "Заметки",
+          submit: "В WhatsApp",
+          dir: "ltr",
+          mTitle: "Заказ заранее",
+          mText:
+            "Чтобы гарантировать свежесть, мы принимаем заказы минимум за день.",
+          mBtn: "Понятно!",
+        },
+      };
+
+      const menuData = [
         {
-          name: "גרין דרקון",
+          id: 1,
+          he: "גרין דרקון",
+          en: "Green Dragon",
+          ru: "Зеленый Дракон",
           price: 45,
-          desc: "אורז, נורי, שרימפס, אבוקדו, גבינה",
-          pieces: 8,
-          tag: "מומלץ",
+          desc_he: "אורז, נורי, שרימפס, אבוקדו, גבינה",
+          desc_en: "Rice, Nori, Shrimp, Avocado, Cheese",
+          desc_ru: "Рис, нори, креветка, авокадо, сыр",
         },
         {
-          name: "פילדלפיה",
+          id: 2,
+          he: "פילדלפיה",
+          en: "Philadelphia",
+          ru: "Филадельфия",
           price: 45,
-          desc: "אורז, נורי, גבינת שמנת, מלפפון, סלמון",
-          pieces: 8,
-          tag: null,
+          desc_he: "סלמון, גבינת שמנת, מלפפון",
+          desc_en: "Salmon, Cream cheese, Cucumber",
+          desc_ru: "Лосось, сливочный сыр, огурец",
         },
         {
-          name: "פילדלפיה סלמון שרימפס",
+          id: 3,
+          he: "פילדלפיה סלמון שרימפס",
+          en: "Philadelphia Salmon Shrimp",
+          ru: "Филадельфия Лосось Креветка",
           price: 50,
-          desc: "אורז, נורי, גבינה, מלפפון, שרימפס",
-          pieces: 8,
-          tag: "פופולרי",
+          desc_he: "סלמון, גבינה, מלפפון, שרימפס",
+          desc_en: "Salmon, Cheese, Cucumber, Shrimp",
+          desc_ru: "Лосось, сыр, огурец, креветка",
         },
         {
-          name: "קליפורניה שומשום וסרטן",
+          id: 4,
+          he: "קליפורניה סרטן שלג",
+          en: "California Snow Crab",
+          ru: "Калифорния Снежный Краб",
           price: 35,
-          desc: "אורז, נורי, סרטן, מלפפון, שומשום",
-          pieces: 8,
-          tag: null,
+          desc_he: "אורז, נורי, שומשום, סרטן שלג",
+          desc_en: "Rice, Nori, Sesame, Snow Crab",
+          desc_ru: "Рис, нори, кунжут, снежный краб",
         },
         {
-          name: "סלמון קליפורניה",
+          id: 5,
+          he: "סלמון קליפורניה",
+          en: "Salmon California",
+          ru: "Лосось Калифорния",
           price: 45,
-          desc: "נורי, אורז, גבינה, מלפפון, סלמון, שומשום",
-          pieces: 8,
-          tag: null,
+          desc_he: "סלמון, גבינה, מלפפון, שומשום",
+          desc_en: "Salmon, Cheese, Cucumber, Sesame",
+          desc_ru: "Лосось, сыр, огурец, кунжут",
         },
         {
-          name: "שרימפס קליפורניה",
+          id: 6,
+          he: "שרימפס קליפורניה",
+          en: "Shrimp California",
+          ru: "Креветка Калифорния",
           price: 45,
-          desc: "נורי, אורז, גבינת שמנת, שרימפס, שומשום",
-          pieces: 8,
-          tag: null,
+          desc_he: "שרימפס, גבינת שמנת, שומשום",
+          desc_en: "Shrimp, Cream cheese, Sesame",
+          desc_ru: "Креветка, сливочный сыр, кунжут",
         },
         {
-          name: "רול טמפורה",
+          id: 7,
+          he: "רול טמפורה",
+          en: "Tempura Roll",
+          ru: "Темпура Ролл",
           price: 55,
-          desc: "אורז, נורי, סלמון, גבינה, בלילת אבוקדו",
-          pieces: null,
-          tag: "🔥 חם",
+          desc_he: "רול חם בטמפורה: סלמון, גבינה ואבוקדו",
+          desc_en: "Hot Tempura Roll: Salmon, Cheese, Avocado",
+          desc_ru: "Горячий Темпура Ролл: Лосось, сыр, авокадо",
         },
         {
-          name: "סלמון פוטומאקי",
+          id: 8,
+          he: "סלמון פוטומאקי",
+          en: "Salmon Futomaki",
+          ru: "Лосось Футомаки",
           price: 40,
-          desc: "נורי, אורז, סלמון, מלפפון, גבינה, אבוקדו",
-          pieces: 8,
-          tag: null,
+          desc_he: "סלמון, מלפפון, גבינה, אבוקדו",
+          desc_en: "Salmon, Cucumber, Cheese, Avocado",
+          desc_ru: "Лосось, огурец, сыр, авокадо",
         },
       ];
 
-      const grid = document.getElementById("menu-grid");
+      let currentLang = "he";
+      let cart = {};
 
-      menuItems.forEach((item) => {
-        const card = document.createElement("div");
-        card.className =
-          "sushi-card glass-effect p-6 rounded-2xl border border-white/10 flex flex-col justify-between transition-all duration-300 relative group";
+      function setLanguage(lang) {
+        currentLang = lang;
+        document.body.dir = translations[lang].dir;
+        document.getElementById("hero-title").innerText =
+          translations[lang].heroTitle;
+        document.getElementById("hero-subtitle").innerText =
+          translations[lang].heroSub;
+        document.getElementById("remind-text").innerText =
+          translations[lang].remind;
+        document.getElementById("gallery-label").innerText =
+          translations[lang].gallery;
+        document.getElementById("checkout-btn").innerText =
+          translations[lang].checkout;
+        document.getElementById("mini-cart-items").innerText =
+          translations[lang].selection;
+        document.getElementById("form-title").innerText =
+          translations[lang].formTitle;
+        document.getElementById("cust-name").placeholder =
+          translations[lang].name;
+        document.getElementById("cust-phone").placeholder =
+          translations[lang].phone;
+        document.getElementById("cust-notes").placeholder =
+          translations[lang].notes;
+        document.getElementById("submit-btn").innerText =
+          translations[lang].submit;
 
-        card.innerHTML = `
-                ${
-                  item.tag
-                    ? `<span class="absolute -top-3 -right-3 bg-lime-500 text-black text-[10px] font-bold px-3 py-1 rounded-full shadow-lg z-10">${item.tag}</span>`
-                    : ""
-                }
-                <div class="flex justify-between items-start mb-4">
+        // Modal translations
+        document.getElementById("modal-title").innerText =
+          translations[lang].mTitle;
+        document.getElementById("modal-text").innerText =
+          translations[lang].mText;
+        document.getElementById("modal-btn").innerText =
+          translations[lang].mBtn;
+
+        document
+          .querySelectorAll(".lang-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("btn-" + lang).classList.add("active");
+        renderMenu();
+      }
+
+      function closeModal() {
+        document.getElementById("reminder-modal").classList.add("hidden");
+      }
+      function toggleAddressField() {
+        const city = document.getElementById("cust-city").value;
+        document.getElementById("address-wrapper").style.display =
+          city === "מעלות" ? "block" : "none";
+      }
+
+      function renderMenu() {
+        const grid = document.getElementById("menu-grid");
+        grid.innerHTML = menuData
+          .map((item) => {
+            const qty = cart[item.id] ? cart[item.id].qty : 0;
+            return `
+                <div class="menu-card p-6 flex flex-col justify-between">
                     <div>
-                        <h3 class="text-xl font-bold group-hover:text-lime-400 transition-colors">${
-                          item.name
-                        }</h3>
-                        <p class="text-gray-400 text-sm mt-2 leading-relaxed">${
-                          item.desc
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold uppercase tracking-tight">${
+                              item[currentLang]
+                            }</h3>
+                            <span class="text-lime-400 font-bold">₪${
+                              item.price
+                            }</span>
+                        </div>
+                        <p class="text-gray-500 text-xs italic leading-relaxed">${
+                          item["desc_" + currentLang]
                         }</p>
                     </div>
-                    <div class="text-2xl font-bold text-lime-400 mr-4">
-                        ₪${item.price}
+                    <div class="flex items-center justify-end gap-5 mt-6">
+                        <button onclick="updateQty(${
+                          item.id
+                        }, -1)" class="text-gray-500 hover:text-white text-xl">-</button>
+                        <span class="text-sm font-bold min-w-[20px] text-center">${qty}</span>
+                        <button onclick="updateQty(${
+                          item.id
+                        }, 1)" class="w-10 h-10 border border-gray-700 rounded-xl hover:border-lime-400 transition-all font-bold">+</button>
                     </div>
-                </div>
-                <div class="flex items-center justify-between mt-4">
-                    <span class="text-xs text-gray-500">${
-                      item.pieces ? item.pieces + " יחידות" : "רול שלם"
-                    }</span>
-                    <button onclick="window.location.href='https://wa.me/972587659001?text=אני רוצה להזמין ${
-                      item.name
-                    }'" class="text-xs bg-white/5 hover:bg-lime-500 hover:text-black px-3 py-1 rounded-md transition border border-white/10">הוספה להזמנה</button>
-                </div>
-            `;
-        grid.appendChild(card);
-      });
+                </div>`;
+          })
+          .join("");
+      }
+
+      function updateQty(id, change) {
+        document
+          .getElementById("click-sound")
+          .play()
+          .catch(() => {});
+        if (!cart[id] && change > 0)
+          cart[id] = { ...menuData.find((m) => m.id === id), qty: 1 };
+        else if (cart[id]) {
+          cart[id].qty += change;
+          if (cart[id].qty <= 0) delete cart[id];
+        }
+        renderMenu();
+        updateMiniCart();
+      }
+
+      function updateMiniCart() {
+        const total = Object.values(cart).reduce(
+          (s, i) => s + i.price * i.qty,
+          0
+        );
+        const items = Object.values(cart).reduce((s, i) => s + i.qty, 0);
+        const bar = document.getElementById("mini-cart");
+        if (items > 0) {
+          bar.classList.remove("translate-y-full");
+          document.getElementById("mini-cart-total").innerText = `₪${total}`;
+        } else bar.classList.add("translate-y-full");
+      }
+
+      function openOrderForm() {
+        document.getElementById("order-overlay").classList.remove("hidden");
+        toggleAddressField();
+        const sum = Object.values(cart)
+          .map((i) => `${i[currentLang]} x${i.qty}`)
+          .join(", ");
+        document.getElementById("summary-area").innerText = sum;
+      }
+
+      function closeOrderForm() {
+        document.getElementById("order-overlay").classList.add("hidden");
+      }
+      function clearCart() {
+        cart = {};
+        renderMenu();
+        updateMiniCart();
+      }
+
+      function sendWhatsApp() {
+        const name = document.getElementById("cust-name").value;
+        const city = document.getElementById("cust-city").value;
+        const addr = document.getElementById("cust-address").value;
+        if (!name) return alert("נא למלא שם");
+        if (city === "מעלות" && !addr) return alert("נא למלא כתובת");
+
+        let msg = `*NEW ORDER - INNA SUSHI*\n👤 שם: ${name}\n📞 טלפון: ${
+          document.getElementById("cust-phone").value
+        }\n📍 עיר: ${city}\n`;
+        if (city === "מעלות") msg += `🏠 כתובת: ${addr}\n`;
+        else msg += `🚩 *איסוף עצמי*\n`;
+        msg += `\n*מנות:*\n`;
+        Object.values(cart).forEach(
+          (i) => (msg += `▪️ ${i[currentLang]} x${i.qty}\n`)
+        );
+        msg += `\n*סה"כ: ₪${Object.values(cart).reduce(
+          (s, i) => s + i.price * i.qty,
+          0
+        )}*`;
+        window.open(
+          `https://wa.me/972587659001?text=${encodeURIComponent(msg)}`,
+          "_blank"
+        );
+      }
+
+      setLanguage("he");
     </script>
   </body>
 </html>
