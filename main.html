@@ -76,10 +76,7 @@
         class="bg-stone-900 border border-lime-500/30 p-8 rounded-3xl max-w-sm w-full text-center shadow-2xl"
       >
         <div class="text-5xl mb-4">⏳</div>
-        <h3
-          id="modal-title"
-          class="text-2xl font-bold mb-2 text-lime-400 font-bold"
-        >
+        <h3 id="modal-title" class="text-2xl font-bold mb-2 text-lime-400">
           הזמנה יום מראש
         </h3>
         <p id="modal-text" class="text-gray-300 mb-6 font-light text-lg">
@@ -99,7 +96,7 @@
       class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center premium-glass border-b border-white/5"
     >
       <span class="font-bold tracking-tighter text-xl uppercase"
-        >INNA<span class="text-lime-400 text-bold text-lg">SUSHI</span></span
+        >INNA<span class="text-lime-400">SUSHI</span></span
       >
       <div class="flex gap-4 text-xs font-bold uppercase tracking-widest">
         <button
@@ -163,22 +160,18 @@
           <img
             src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=400&fit=crop"
             class="gallery-img shadow-lg"
-            alt="1"
           />
           <img
             src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=400&h=400&fit=crop"
             class="gallery-img shadow-lg"
-            alt="2"
           />
           <img
             src="https://images.unsplash.com/photo-1617196034183-421b4917c92d?w=400&h=400&fit=crop"
             class="gallery-img shadow-lg"
-            alt="3"
           />
           <img
             src="https://images.unsplash.com/photo-1583623025817-d180a2221d0a?w=400&h=400&fit=crop"
             class="gallery-img shadow-lg"
-            alt="4"
           />
         </div>
       </section>
@@ -241,7 +234,7 @@
       class="fixed inset-0 z-[60] bg-[#0f0f0f] hidden flex flex-col p-8 overflow-y-auto"
     >
       <div class="max-w-xl mx-auto w-full">
-        <div class="flex justify-between items-center mb-10">
+        <div class="flex justify-between items-center mb-6">
           <h2
             id="form-title"
             class="text-2xl font-light uppercase tracking-widest"
@@ -252,6 +245,12 @@
             &times;
           </button>
         </div>
+
+        <div
+          id="cart-summary-list"
+          class="mb-10 space-y-4 bg-stone-900/50 p-4 rounded-2xl border border-white/5"
+        ></div>
+
         <div class="space-y-4">
           <input
             type="text"
@@ -291,10 +290,20 @@
             class="w-full p-4 h-24"
             placeholder="הערות מיוחדות..."
           ></textarea>
+
           <div
-            id="summary-area"
-            class="text-xs text-gray-500 border-t border-white/5 pt-4 mt-4"
-          ></div>
+            class="flex justify-between items-center py-4 border-t border-white/10"
+          >
+            <span class="uppercase tracking-widest text-xs text-gray-400"
+              >Total:</span
+            >
+            <span
+              id="final-total-display"
+              class="text-2xl font-bold text-lime-400"
+              >₪0</span
+            >
+          </div>
+
           <button
             onclick="sendWhatsApp()"
             id="submit-btn"
@@ -315,7 +324,7 @@
           gallery: "המטבח שלנו",
           checkout: "להזמנה",
           selection: "פריטים בסל",
-          formTitle: "פרטי הזמנה",
+          formTitle: "סיכום הזמנה",
           name: "שם מלא",
           phone: "טלפון",
           address: "כתובת",
@@ -333,7 +342,7 @@
           gallery: "Our Kitchen",
           checkout: "Checkout",
           selection: "Items",
-          formTitle: "Order Details",
+          formTitle: "Order Summary",
           name: "Full Name",
           phone: "Phone",
           address: "Address",
@@ -477,15 +486,12 @@
           translations[lang].notes;
         document.getElementById("submit-btn").innerText =
           translations[lang].submit;
-
-        // Modal translations
         document.getElementById("modal-title").innerText =
           translations[lang].mTitle;
         document.getElementById("modal-text").innerText =
           translations[lang].mText;
         document.getElementById("modal-btn").innerText =
           translations[lang].mBtn;
-
         document
           .querySelectorAll(".lang-btn")
           .forEach((b) => b.classList.remove("active"));
@@ -549,6 +555,11 @@
         }
         renderMenu();
         updateMiniCart();
+        if (
+          !document.getElementById("order-overlay").classList.contains("hidden")
+        ) {
+          renderCartSummary(); // Refresh summary if open
+        }
       }
 
       function updateMiniCart() {
@@ -561,25 +572,68 @@
         if (items > 0) {
           bar.classList.remove("translate-y-full");
           document.getElementById("mini-cart-total").innerText = `₪${total}`;
-        } else bar.classList.add("translate-y-full");
+        } else {
+          bar.classList.add("translate-y-full");
+          closeOrderForm(); // Close form if cart becomes empty
+        }
+      }
+
+      function renderCartSummary() {
+        const list = document.getElementById("cart-summary-list");
+        const totalDisplay = document.getElementById("final-total-display");
+        let total = 0;
+
+        list.innerHTML = Object.values(cart)
+          .map((i) => {
+            total += i.price * i.qty;
+            return `
+                <div class="flex justify-between items-center py-2 border-b border-white/5 last:border-0">
+                    <div class="flex-grow">
+                        <span class="block text-sm font-bold">${i[currentLang]}</span>
+                        <span class="text-[10px] text-gray-500">₪${i.price} / יח'</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-2 border border-gray-700 rounded-lg px-2 py-1">
+                            <button onclick="updateQty(${i.id}, -1)" class="text-gray-400 hover:text-white">-</button>
+                            <span class="text-xs font-bold w-4 text-center">${i.qty}</span>
+                            <button onclick="updateQty(${i.id}, 1)" class="text-gray-400 hover:text-white">+</button>
+                        </div>
+                        <button onclick="deleteFromCart(${i.id})" class="text-gray-600 hover:text-red-500 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+                </div>`;
+          })
+          .join("");
+        totalDisplay.innerText = `₪${total}`;
+      }
+
+      function deleteFromCart(id) {
+        delete cart[id];
+        renderMenu();
+        updateMiniCart();
+        renderCartSummary();
       }
 
       function openOrderForm() {
         document.getElementById("order-overlay").classList.remove("hidden");
         toggleAddressField();
-        const sum = Object.values(cart)
-          .map((i) => `${i[currentLang]} x${i.qty}`)
-          .join(", ");
-        document.getElementById("summary-area").innerText = sum;
+        renderCartSummary();
       }
 
       function closeOrderForm() {
         document.getElementById("order-overlay").classList.add("hidden");
       }
-      function clearCart() {
+
+      function clearWebsite() {
         cart = {};
+        document.getElementById("cust-name").value = "";
+        document.getElementById("cust-phone").value = "";
+        document.getElementById("cust-address").value = "";
+        document.getElementById("cust-notes").value = "";
         renderMenu();
         updateMiniCart();
+        closeOrderForm();
       }
 
       function sendWhatsApp() {
@@ -602,10 +656,14 @@
           (s, i) => s + i.price * i.qty,
           0
         )}*`;
+
         window.open(
           `https://wa.me/972587659001?text=${encodeURIComponent(msg)}`,
           "_blank"
         );
+
+        // איפוס האתר לאחר השליחה
+        setTimeout(clearWebsite, 1000);
       }
 
       setLanguage("he");
